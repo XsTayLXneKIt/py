@@ -1,34 +1,18 @@
-import random
+from Crypto.Cipher import AES
+import os
 
-def encrypt_text(text):
-    # Generate a random seed
-    seed = random.randint(1, 100000)
-    
-    # Save the seed to a file
-    with open("seed.txt", "w") as f:
-        f.write(str(seed))
-    
-    # Use the seed to initialize the random number generator
-    random.seed(seed)
-    
-    # Encrypt the text by randomly swapping characters
-    text_list = list(text)
-    for i in range(len(text_list)):
-        j = random.randint(0, len(text_list)-1)
-        text_list[i], text_list[j] = text_list[j], text_list[i]
-    encrypted_text = ''.join(text_list)
-    
-    # Save the encrypted text to a file
-    with open("output.txt", "w") as f:
-        f.write(encrypted_text)
-    
-    return encrypted_text
+def encrypt(message, key_filename):
+    with open(key_filename, 'rb') as key_file:
+        key = key_file.read()
+    iv = os.urandom(16)
+    cipher = AES.new(key, AES.MODE_EAX, iv)
+    ciphertext, tag = cipher.encrypt_and_digest(message)
+    with open('output.txt', 'wb') as output_file:
+        [output_file.write(x) for x in (iv, tag, ciphertext)]
 
-# Get input from user
+    return ciphertext
+
 text = input("Enter text to encrypt: ")
-
-# Encrypt the text
-encrypted_text = encrypt_text(text)
-
-# Display the encrypted text
-print("Encrypted text:", encrypted_text)
+key_filename = "key.txt"
+encrypted_text = encrypt(text.encode(), key_filename)
+print("Encrypted text:", encrypted_text.hex())
