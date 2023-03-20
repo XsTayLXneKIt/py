@@ -7,6 +7,4 @@
 3. To decrypt text, you can launch decrypt.py file
 
 
-
-Made by zuzo
 zuzo#1001 - discord
