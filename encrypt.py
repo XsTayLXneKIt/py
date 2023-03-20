@@ -23,3 +23,12 @@ def encrypt_text(text):
         f.write(encrypted_text)
     
     return encrypted_text
+
+# Get input from user
+text = input("Enter text to encrypt: ")
+
+# Encrypt the text
+encrypted_text = encrypt_text(text)
+
+# Display the encrypted text
+print("Encrypted text:", encrypted_text)
